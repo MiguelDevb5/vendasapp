@@ -15,13 +15,20 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Database connection
-const pool = new Pool({
+const poolConfig = process.env.DATABASE_URL ? {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+} : {
     user: process.env.DB_USER || 'vendas_user',
     host: process.env.DB_HOST || 'localhost',
     database: process.env.DB_NAME || 'vendasapp',
     password: process.env.DB_PASSWORD || 'vendas_password',
     port: process.env.DB_PORT || 5432,
-});
+};
+
+const pool = new Pool(poolConfig);
 
 // Retry DB connection on startup
 pool.on('error', (err) => {
