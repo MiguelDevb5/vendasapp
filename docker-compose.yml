@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: vendas_user
+      POSTGRES_PASSWORD: vendas_password
+      POSTGRES_DB: vendasapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=vendas_user
+      - DB_PASSWORD=vendas_password
+      - DB_HOST=db
+      - DB_NAME=vendasapp
+      - DB_PORT=5432
+    depends_on:
+      - db
+    volumes:
+      - ./public:/usr/src/public
+
+volumes:
+  postgres_data:

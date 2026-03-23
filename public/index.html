@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VendasApp - Controle Profissional</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-overlay active">
+        <div class="login-card glass-effect">
+            <div class="login-header">
+                <i class="ri-store-3-fill"></i>
+                <h2>VendasApp</h2>
+                <p>Acesse sua conta para continuar</p>
+            </div>
+            <div id="login-form-container">
+                <form id="form-login">
+                    <div class="form-group">
+                        <label for="login-username">Usuário</label>
+                        <input type="text" id="login-username" required placeholder="admin">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Senha</label>
+                        <input type="password" id="login-password" required placeholder="******">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Entrar no Sistema</button>
+                    <p style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
+                        Não tem uma conta? <br><a href="#" id="link-show-register" style="color: var(--primary); font-weight: 500; text-decoration: none;">Criar conta nova</a>
+                    </p>
+                </form>
+            </div>
+
+            <div id="register-form-container" style="display: none;">
+                <form id="form-register">
+                    <div class="form-group">
+                        <label for="reg-username">Novo Usuário</label>
+                        <input type="text" id="reg-username" required placeholder="seunome">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Criar Senha</label>
+                        <input type="password" id="reg-password" required placeholder="sua senha secreta">
+                    </div>
+                    <button type="submit" class="btn btn-lg w-100" style="background: var(--success); color: white; border: none; font-weight: bold;"><i class="ri-user-add-line"></i> Cadastrar e Entrar</button>
+                    <p style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
+                        Já tem conta? <br><a href="#" id="link-show-login" style="color: var(--primary); font-weight: 500; text-decoration: none;">Fazer Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="main-app" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="ri-store-3-fill"></i>
+                <span>VendasApp</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <i class="ri-dashboard-line"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-target="sales">
+                    <i class="ri-shopping-cart-2-line"></i> Nova Venda
+                </a>
+                <a href="#" class="nav-item" data-target="inventory">
+                    <i class="ri-box-3-line"></i> Estoque
+                </a>
+                <a href="#" class="nav-item" data-target="history">
+                    <i class="ri-history-line"></i> Histórico
+                </a>
+                <a href="#" class="nav-item logout-btn" id="btn-logout" style="margin-top: auto; color: var(--danger); font-weight: 500;">
+                    <i class="ri-logout-box-r-line"></i> Sair
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <header class="section-header">
+                    <h2>Visão Geral</h2>
+                    <p class="date-display" id="current-date"></p>
+                </header>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon revenue-icon"><i class="ri-money-dollar-circle-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Vendido</h3>
+                            <p class="stat-value" id="dashboard-revenue">R$ 0,00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon profit-icon"><i class="ri-line-chart-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Lucro Total</h3>
+                            <p class="stat-value" id="dashboard-profit">R$ 0,00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon stock-icon"><i class="ri-archive-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Produtos em Estoque</h3>
+                            <p class="stat-value" id="dashboard-stock">0 un</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon sales-icon"><i class="ri-shopping-bag-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Vendas Registradas</h3>
+                            <p class="stat-value" id="dashboard-sales-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Preview on Dashboard -->
+                <div class="dashboard-widgets" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                    <div class="dashboard-recent">
+                        <div class="card-header">
+                            <h3>Vendas Recentes</h3>
+                            <button class="btn btn-outline btn-sm" onclick="navTo('history')">Ver Todas</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Data</th>
+                                        <th>Qtd</th>
+                                        <th>Valor Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-recent-sales">
+                                    <!-- JS Injected Content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-alerts">
+                        <div class="card-header">
+                            <h3><i class="ri-alarm-warning-fill" style="color: var(--danger); margin-right: 0.5rem;"></i> Estoque Baixo</h3>
+                        </div>
+                        <div class="alerts-container" id="dashboard-low-stock" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <!-- JS Injected Content -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sales Registration Section -->
+            <section id="sales" class="content-section">
+                <header class="section-header">
+                    <h2>Registrar Nova Venda</h2>
+                    <p>Adicione rapidamente uma nova saída de produto</p>
+                </header>
+                
+                <div class="form-card">
+                    <form id="form-sale">
+                        <div class="form-group">
+                            <label for="sale-barcode">Busca Rápida (Cód. Barras)</label>
+                            <input type="text" id="sale-barcode" placeholder="Bipe ou digite o código de barras e tecle Enter..." autocomplete="off">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sale-product">Selecione o Produto</label>
+                            <div class="select-wrapper">
+                                <select id="sale-product" required>
+                                    <option value="" disabled selected>Escolha um produto do estoque...</option>
+                                    <!-- JS Injected Content -->
+                                </select>
+                                <i class="ri-arrow-down-s-line"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sale-quantity">Quantidade</label>
+                                <input type="number" id="sale-quantity" min="1" value="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sale-total">Valor Total a Cobrar (R$)</label>
+                                <input type="text" id="sale-total" readonly disabled placeholder="R$ 0,00">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="ri-check-line"></i> Confirmar Venda
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Inventory / Products Section -->
+            <section id="inventory" class="content-section">
+                <header class="section-header">
+                    <div class="header-left">
+                        <h2>Controle de Estoque</h2>
+                        <p>Gerencie seus produtos e preços</p>
+                    </div>
+                    <button class="btn btn-primary" id="btn-add-product">
+                        <i class="ri-add-line"></i> Novo Produto
+                    </button>
+                </header>
+
+                <div class="table-container">
+                    <table class="data-table" id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Custo</th>
+                                <th>Venda</th>
+                                <th>Estoque</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-list">
+                            <!-- JS Injected -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="history" class="content-section">
+                <header class="section-header">
+                    <h2>Histórico de Vendas</h2>
+                    <p>Consulte e gerencie todas as transações realizadas</p>
+                </header>
+                
+                <div class="history-container" id="history-grouped-list">
+                    <!-- JS Injected Grouped Items by Day -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="modal-product">
+        <div class="modal-content glass-effect">
+            <header class="modal-header">
+                <h3>Adicionar Novo Produto</h3>
+                <button class="btn-close" id="btn-close-product"><i class="ri-close-line"></i></button>
+            </header>
+            <form id="form-product">
+                <div class="form-group">
+                    <label for="prod-name">Nome do Produto</label>
+                    <input type="text" id="prod-name" required placeholder="Ex: Camiseta Básica">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prod-category">Categoria (Opcional)</label>
+                        <input type="text" id="prod-category" placeholder="Ex: Roupas">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-barcode">Cód. Barras (Opcional)</label>
+                        <input type="text" id="prod-barcode" placeholder="Ex: 789123">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prod-cost">Preço de Custo (R$)</label>
+                        <input type="number" id="prod-cost" step="0.01" min="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-price">Preço de Venda (R$)</label>
+                        <input type="number" id="prod-price" step="0.01" min="0.01" required placeholder="0.00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prod-stock">Quantidade Inicial em Estoque</label>
+                    <input type="number" id="prod-stock" min="0" required placeholder="0">
+                </div>
+                <div class="form-actions right">
+                    <button type="button" class="btn btn-outline" id="btn-cancel-product">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
